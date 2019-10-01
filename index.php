@@ -115,7 +115,7 @@ require('layout/header.php');
 		<div class="col-10 col-md-8 col-lg-6">
 			<form class="example" role="form" method="post" action="" autocomplete="off">
 				<h2>Please Sign Up</h2>
-				<p>Already a member? <a href='login.php'>Login</a></p>
+				<p>Already a member? <a class="text-blue" href='login.php'>Login</a></p>
 				<hr>
 
 				<?php
@@ -161,7 +161,7 @@ require('layout/header.php');
 
 				<div class="row">
 					<div class="col-xs-6 col-md-6"><input type="submit" name="submit" value="Register"
-							class="btn btn-dark btn-block btn-lg" tabindex="5"></div>
+							class="btn btn-blue btn-block btn-lg" tabindex="5"></div>
 				</div>
 			</form>
 			</div>

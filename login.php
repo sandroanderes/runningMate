@@ -20,7 +20,7 @@ if(isset($_POST['submit'])){
 
 		if($user->login($username,$password)){
 			$_SESSION['username'] = $username;
-			header('Location: main.php');
+			header('Location: home.php');
 			exit;
 
 		} else {
@@ -48,7 +48,7 @@ require('layout/header.php');
 
 		<form role="form" method="post" action="" autocomplete="off">
 			<h2>Please Login</h2>
-			<p><a href='./'>Back to home page</a></p>
+			<p><a class="text-blue" href='./'>Not yet registered?</a></p>
 			<hr>
 
 			<?php
@@ -92,14 +92,14 @@ require('layout/header.php');
 
 			<div class="row">
 				<div class="col-xs-9 col-sm-9 col-md-9">
-					<a href='reset.php'>Forgot your Password?</a>
+					<a class="text-blue" href='reset.php'>Forgot your Password?</a>
 				</div>
 			</div>
 
 			<hr>
 			<div class="row">
 				<div class="col-xs-6 col-md-6"><input type="submit" name="submit" value="Login"
-						class="btn btn-dark btn-block btn-lg" tabindex="5"></div>
+						class="btn btn-blue btn-block btn-lg" tabindex="5"></div>
 			</div>
 		</form>
 		</div>

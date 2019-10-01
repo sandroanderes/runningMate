@@ -9,12 +9,12 @@ body {
 
 .fa-map-pin {
     border-radius: 50%;
-    background: #b4b4b4;
+    background: #000;
     cursor: pointer;
 }
 
 .fa-map-pin:hover {
-    background: #EA6212;
+    background: #283DB5;
 }
 
 .fa-2x {
@@ -24,7 +24,6 @@ body {
 .fa-stack-1x {
     font-size: 1em !important;
 }
-
 
 
 ul {
@@ -62,26 +61,84 @@ form {
     bottom: 0;
 }
 
-.flex-container {
-    padding: 0;
-    margin: 0;
-    list-style: none;
-
-    -ms-box-orient: horizontal;
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: -moz-flex;
-    display: -webkit-flex;
-    display: flex;
-    float: left;
+.table thead th {
+    border: none;
 }
 
-.center {
-    -webkit-align-items: center;
-    align-items: center;
+.text-blue{
+    color: #283DB5;
 }
 
-.mt-6{
-    margin-top: 7rem!important
+.btn-blue{
+    background-color: #283DB5;
+    border-color: #283DB5;
+    color: #fff;
 }
+
+.overlay {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    /* background-color: #283DB5; */
+    background-color: #fff;
+    background-color: rgba(255, 255, 255, 1);
+    overflow-x: hidden;
+    transition: 0.5s;
+  }
+
+.overlay-table {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 100%;
+    /* background-color: #283DB5; */
+    background-color: #fff;
+    background-color: rgba(255, 255, 255, 1);
+    overflow-x: hidden;
+    transition: 0.5s;
+  }
+  
+  .overlay-content {
+    position: relative;
+    top: 25%;
+    width: 100%;
+    text-align: center;
+    margin-top: 30px;
+  }
+  
+  .overlay a,
+  .overlay-table a {
+    padding: 8px;
+    text-decoration: none;
+    font-size: 36px;
+    color: #000;
+    display: block;
+    transition: 0.3s;
+  }
+  
+  .overlay a:hover, .overlay a:focus,
+  .overlay-table a:hover, .overlay-table a:focus {
+    color: #f1f1f1;
+  }
+  
+  .overlay .closebtn,
+  .overlay-table .closebtn {
+    position: absolute;
+    top: 20px;
+    right: 45px;
+    font-size: 60px;
+  }
+  
+  @media screen and (max-height: 450px) {
+    .overlay a {font-size: 20px}
+    .overlay .closebtn {
+    font-size: 40px;
+    top: 15px;
+    right: 35px;
+    }
+  }
