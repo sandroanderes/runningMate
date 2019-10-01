@@ -1,0 +1,87 @@
+html{
+    height: 100%!important;
+}
+body {
+    background-color: #fff;
+    font-family: "Raleway", "Segoe UI", sans-serif;
+    height: 100%!important;
+}
+
+.fa-map-pin {
+    border-radius: 50%;
+    background: #b4b4b4;
+    cursor: pointer;
+}
+
+.fa-map-pin:hover {
+    background: #EA6212;
+}
+
+.fa-2x {
+    font-size: 6em !important;
+}
+
+.fa-stack-1x {
+    font-size: 1em !important;
+}
+
+
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    padding: 15px 0;
+    background: rgb(46, 46, 46);
+    color: #eee;
+    list-style-type: none;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px 0;
+    border-radius: 4px;
+}
+
+span {
+    display: inline-block;
+    margin: 0 20px;
+    width: 17%;
+}
+
+span.first {
+    text-align: left;
+}
+
+span.last {
+    text-align: right;
+}
+
+form {
+    top: 0;
+    bottom: 0;
+}
+
+.flex-container {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+
+    -ms-box-orient: horizontal;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -moz-flex;
+    display: -webkit-flex;
+    display: flex;
+    float: left;
+}
+
+.center {
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+.mt-6{
+    margin-top: 7rem!important
+}
