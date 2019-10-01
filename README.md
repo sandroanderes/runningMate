@@ -1,2 +1,2 @@
-# mdev.sandroanderes.ch
+# Beermate-Mobile
  Website for beermate app with nodejs API
