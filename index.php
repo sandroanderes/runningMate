@@ -1,124 +1,57 @@
-<?php require('includes/config.php');
+<?php
+//include config
+require_once('includes/config.php');
 
-//if logged in redirect to members page
+//check if already logged in move to home page
 if( $user->is_logged_in() ){ header('Location: main.php'); exit(); }
 
-//if form has been submitted process it
+//process login form if submitted
 if(isset($_POST['submit'])){
 
-    if (!isset($_POST['username'])) $error[] = "Please fill out all fields";
-    if (!isset($_POST['email'])) $error[] = "Please fill out all fields";
-    if (!isset($_POST['password'])) $error[] = "Please fill out all fields";
+	if (!isset($_POST['username'])) $error[] = "Please fill out all fields";
+	if (!isset($_POST['password'])) $error[] = "Please fill out all fields";
 
 	$username = $_POST['username'];
-
-	//very basic validation
-	if(!$user->isValidUsername($username)){
-		$error[] = 'Usernames must be at least 3 Alphanumeric characters';
-	} else {
-		$stmt = $db->prepare('SELECT username FROM members WHERE username = :username');
-		$stmt->execute(array(':username' => $username));
-		$row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-		if(!empty($row['username'])){
-			$error[] = 'Username provided is already in use.';
+	if ( $user->isValidUsername($username)){
+		if (!isset($_POST['password'])){
+			$error[] = 'A password must be entered';
 		}
+		$password = $_POST['password'];
 
-	}
-
-	if(strlen($_POST['password']) < 3){
-		$error[] = 'Password is too short.';
-	}
-
-	if(strlen($_POST['passwordConfirm']) < 3){
-		$error[] = 'Confirm password is too short.';
-	}
-
-	if($_POST['password'] != $_POST['passwordConfirm']){
-		$error[] = 'Passwords do not match.';
-	}
-
-	//email validation
-	$email = htmlspecialchars_decode($_POST['email'], ENT_QUOTES);
-	if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-	    $error[] = 'Please enter a valid email address';
-	} else {
-		$stmt = $db->prepare('SELECT email FROM members WHERE email = :email');
-		$stmt->execute(array(':email' => $email));
-		$row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-		if(!empty($row['email'])){
-			$error[] = 'Email provided is already in use.';
-		}
-
-	}
-
-
-	//if no errors have been created carry on
-	if(!isset($error)){
-
-		//hash the password
-		$hashedpassword = $user->password_hash($_POST['password'], PASSWORD_BCRYPT);
-
-		//create the activasion code
-		$activasion = md5(uniqid(rand(),true));
-
-		try {
-
-			//insert into database with a prepared statement
-			$stmt = $db->prepare('INSERT INTO members (username,password,email,active) VALUES (:username, :password, :email, :active)');
-			$stmt->execute(array(
-				':username' => $username,
-				':password' => $hashedpassword,
-				':email' => $email,
-				':active' => $activasion
-			));
-			$id = $db->lastInsertId('memberID');
-
-			//send email
-			$to = $_POST['email'];
-			$subject = "Registration Confirmation";
-			$body = "<p>Thank you for registering at demo site.</p>
-			<p>To activate your account, please click on this link: <a href='".DIR."activate.php?x=$id&y=$activasion'>".DIR."activate.php?x=$id&y=$activasion</a></p>
-			<p>Regards Site Admin</p>";
-
-			$mail = new Mail();
-			$mail->setFrom(SITEEMAIL);
-			$mail->addAddress($to);
-			$mail->subject($subject);
-			$mail->body($body);
-			$mail->send();
-
-			//redirect to index page
-			header('Location: index.php?action=joined');
+		if($user->login($username,$password)){
+			$_SESSION['username'] = $username;
+			header('Location: home.php');
 			exit;
 
-		//else catch the exception and show the error.
-		} catch(PDOException $e) {
-		    $error[] = $e->getMessage();
+		} else {
+			$error[] = 'Wrong username or password';
 		}
-
+	}else{
+		$error[] = 'Usernames are required to be Alphanumeric, and between 3-16 characters long';
 	}
 
-}
+
+
+}//end if submit
 
 //define page title
-$title = 'Beermate - Login';
+$title = 'runningMate - Login';
 
 //include header template
-require('layout/header.php');
+require('layout/header.php'); 
 ?>
 
 
 <div class="container text-center h-100">
 	<div class="row h-100 justify-content-center align-items-center">
 		<div class="col-10 col-md-8 col-lg-6">
-			<form class="example" role="form" method="post" action="" autocomplete="off">
-				<h2>Please Sign Up</h2>
-				<p>Already a member? <a class="text-blue" href='login.php'>Login</a></p>
-				<hr>
 
-				<?php
+		<form role="form" method="post" action="" autocomplete="off">
+			<h2>Please Login</h2>
+			<p><a class="text-blue" href='register.php'>Not yet registered?</a></p>
+			<hr>
+
+			<?php
 				//check for any errors
 				if(isset($error)){
 					foreach($error as $error){
@@ -126,47 +59,56 @@ require('layout/header.php');
 					}
 				}
 
-				//if action is joined show sucess
-				if(isset($_GET['action']) && $_GET['action'] == 'joined'){
-					echo "<h2 class='bg-success'>Registration successful, please check your email to activate your account.</h2>";
+				if(isset($_GET['action'])){
+
+					//check the action
+					switch ($_GET['action']) {
+						case 'active':
+							echo "<h2 class='bg-success'>Your account is now active you may now log in.</h2>";
+							break;
+						case 'reset':
+							echo "<h2 class='bg-success'>Please check your inbox for a reset link.</h2>";
+							break;
+						case 'resetAccount':
+							echo "<h2 class='bg-success'>Password changed, you may now login.</h2>";
+							break;
+					}
+
 				}
+
+				
 				?>
 
-				<div class="form-group">
-					<input type="text" name="username" id="username" class="form-control input-lg"
-						placeholder="User Name"
-						value="<?php if(isset($error)){ echo htmlspecialchars($_POST['username'], ENT_QUOTES); } ?>"
-						tabindex="1">
-				</div>
-				<div class="form-group">
-					<input type="email" name="email" id="email" class="form-control input-lg"
-						placeholder="Email Address"
-						value="<?php if(isset($error)){ echo htmlspecialchars($_POST['email'], ENT_QUOTES); } ?>"
-						tabindex="2">
-				</div>
-				<div class="row">
-					<div class="col-xs-6 col-sm-6 col-md-6">
-						<div class="form-group">
-							<input type="password" name="password" id="password" class="form-control input-lg"
-								placeholder="Password" tabindex="3">
-						</div>
-					</div>
-					<div class="col-xs-6 col-sm-6 col-md-6">
-						<div class="form-group">
-							<input type="password" name="passwordConfirm" id="passwordConfirm"
-								class="form-control input-lg" placeholder="Confirm Password" tabindex="4">
-						</div>
-					</div>
-				</div>
+			<div class="form-group">
+				<input type="text" name="username" id="username" class="form-control input-lg" placeholder="User Name"
+					value="<?php if(isset($error)){ echo htmlspecialchars($_POST['username'], ENT_QUOTES); } ?>"
+					tabindex="1">
+			</div>
 
-				<div class="row">
-					<div class="col-xs-6 col-md-6"><input type="submit" name="submit" value="Register"
-							class="btn btn-blue btn-block btn-lg" tabindex="5"></div>
+			<div class="form-group">
+				<input type="password" name="password" id="password" class="form-control input-lg"
+					placeholder="Password" tabindex="3">
+			</div>
+
+			<div class="row">
+				<div class="col-xs-9 col-sm-9 col-md-9">
+					<a class="text-blue" href='reset.php'>Forgot your Password?</a>
 				</div>
-			</form>
 			</div>
+
+			<hr>
+			<div class="row">
+				<div class="col-xs-6 col-md-6"><input type="submit" name="submit" value="Login"
+						class="btn btn-blue btn-block btn-lg" tabindex="5"></div>
 			</div>
-<?php
+		</form>
+		</div>
+		</div>
+
+</div>
+
+
+<?php 
 //include header template
-require('layout/footer.php');
+require('layout/footer.php'); 
 ?>

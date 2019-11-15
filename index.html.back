@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Beerbuddy</title>
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <link href="./assets/css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/0121aadd03.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<body>
+    <div class="container">
+        <div class="left"></div>
+        <div class="main">
+            <h1 class="title">Beerbuddy - a SNDRO REST API</h1>
+            <h3>Search a beerbuddy in your area!</h3>
+
+            <div class="round-button">
+                <div class="round-button-circle"><a onclick="getLocation()" class="round-button"><i
+                            class="fa fa-map-pin fa-3x" aria-hidden="true"></i></a></div>
+            </div>
+
+            <br>
+            <!-- <form id="coordinates">
+                Latitude:<br>
+                <input id="lat" type="text" name="lat" value="Latitude"><br>
+                Longitude:<br>
+                <input id="lng" type="text" name="lng" value="Longitude"><br>
+                <input type="submit" value="Submit">
+            </form> -->
+
+            <script>
+                var x = document.getElementById("demo");
+
+                function getLocation() {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(getCloseUsers, showError);
+                    } else {
+                        x.innerHTML = "Geolocation is not supported by this browser.";
+                    }
+
+                }
+
+                function getCloseUsers(position) {
+
+                    var lat = (position.coords.latitude).toFixed(3);
+                    var lng = (position.coords.longitude).toFixed(3);
+                    console.log(lat + "+" + lng)
+
+                    
+                    var url = 'https://devapp.sandroanderes.ch:3000/api/app/?lat=' + lat + '&lng=' + lng;
+                    const otherParam = {
+                        headers:{
+                            "Content-Type":"application/json"
+                        },
+                        method: "GET"
+                    }
+
+                    fetch(url,otherParam)
+                    .then(resp => {return resp.json()})
+                    .then(function(resp){
+                        document.getElementById("buddys").innerHTML = "";
+
+                        var xdata, x;
+                        
+                        for (var i = 0; i < resp.data.length; i++) {
+                        xdata = resp.data[i];
+                        document.getElementById("buddys").innerHTML += "<ul>";
+                        document.getElementById("buddys").innerHTML += "<li>"+"<span class='first'>"+xdata.name+"</span>"+"<span>"+xdata.status+"</span>"+"<span class='last'>"+(xdata.distance).toFixed(3)+" km"+"</span>"+"</li>";
+                        document.getElementById("buddys").innerHTML += "</ui>";
+                        console.log(xdata);
+                        console.log(resp.data.length);
+                        }
+
+                    })
+                    /* .then(res=> console.log(res)) */
+                    .catch(error=> console.log(error))
+                    
+                    
+                    /* var request = new XMLHttpRequest();
+                    request.open('GET', url, true)
+                    request.onload = function () {
+                        console.log(request.responseText);
+                        // Begin accessing JSON data here
+                        var data = JSON.parse(this.response)
+                        if (request.status >= 200 && request.status < 400) {
+                            console.log(data);
+                            console.log(data.name);
+                            
+                        } else {
+                            console.log('error');
+                        }
+                    }
+                    request.send() */
+
+
+                }
+
+                function showError(error) {
+                    switch (error.code) {
+                        case error.PERMISSION_DENIED:
+                            x.innerHTML = "User denied the request for Geolocation."
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            x.innerHTML = "Location information is unavailable."
+                            break;
+                        case error.TIMEOUT:
+                            x.innerHTML = "The request to get user location timed out."
+                            break;
+                        case error.UNKNOWN_ERROR:
+                            x.innerHTML = "An unknown error occurred."
+                            break;
+                    }
+                }
+            </script>
+
+            <p id=buddys></p>
+        </div>
+        <div class="right"></div>
+    </div>
+</body>
+
+</html>

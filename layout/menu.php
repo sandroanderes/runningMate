@@ -3,8 +3,8 @@
     <div class="overlay-content">
         <a href="./home.php">Home</a>
         <a href="./finder.php">Finder</a>
-        <a href="#">Groups</a>
-        <br>
+        <a href="./clubs.php">Clubs</a>
+        <a href="./profile.php">Profile</a>
         <br>
         <strong><a href="./logout.php">Logout</a></strong>
     </div>
