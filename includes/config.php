@@ -6,10 +6,10 @@ session_start();
 date_default_timezone_set('Europe/Zurich');
 
 //database credentials
-define('DBHOST','dev.sandroanderes.ch');
-define('DBUSER','nodejs_user');
-define('DBPASS','Welcome1');
-define('DBNAME','nodejs_app');
+define('DBHOST','dbhost');
+define('DBUSER','dbuser');
+define('DBPASS','dbpassword');
+define('DBNAME','dbname');
 
 //application address
 define('DIR','https://dev.sandroanderes.ch/');
