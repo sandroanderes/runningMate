@@ -26,9 +26,10 @@
         memberID = '<?php echo $_SESSION['memberID']; ?>'; 
         console.log("memberID: "+memberID);
     </script>
+      
 </head>
 
-<body>
+<body onload="random()">
 
 <?php require('includes/config.php');  
 
@@ -41,8 +42,24 @@ $title = 'runningMate - 403';
 <div class="container text-center h-100">
     <div class="row h-100 justify-content-center align-items-center">
         <div class="col-10 col-md-8 col-lg-6">
-            <h1>Error - 403</h1>
-            <h4>Die Web-App ist nur Mobile verfügbar!</h4>
+            <h1 id="myRandomH1"></h1>
+            <script type="text/javascript" charset="utf-8">
+                var randomStrings = [
+                    "Nice try ;)",
+                    "Maybe next time ;)",
+                    "Let me sleep, tzzzz", 
+                    "Not with me ;)",
+                    "Here ends your journey.",
+                ];
+
+                var randomH1 = document.getElementById("myRandomH1");
+
+                randomIndex = Math.ceil((Math.random()*randomStrings.length-1));
+                newText = randomStrings[randomIndex];
+                randomH1.innerHTML = newText;
+    </script>
+            
+            <h4>Die Web-App ist nur auf mobilen Endgeräten verfügbar!</h4>
         </div>
     </div>
 </div>
